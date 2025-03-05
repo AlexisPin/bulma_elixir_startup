@@ -8,7 +8,12 @@ defmodule BulmaExampleWeb.Endpoint do
     store: :cookie,
     key: "_bulma_example_key",
     signing_salt: "NIi7w6O5",
-    same_site: "Lax"
+    same_site: "Lax",
+    domain: Application.compile_env!(:bulma_example, :cookie_domain)
+  ]
+
+  @allowed_origins [
+    Application.compile_env!(:bulma_example, :app_url)
   ]
 
   socket "/live", Phoenix.LiveView.Socket,
@@ -49,5 +54,10 @@ defmodule BulmaExampleWeb.Endpoint do
   plug Plug.MethodOverride
   plug Plug.Head
   plug Plug.Session, @session_options
+
+  plug CORSPlug,
+    origins: @allowed_origins,
+    headers: ["authorization", "content-type"]
+
   plug BulmaExampleWeb.Router
 end

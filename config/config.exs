@@ -1,22 +1,26 @@
 import Config
 
-app_url = 
+app_url = System.get_env("APP_URL")
+api_url = System.get_env("API_URL")
+platform_host = System.get_env("PLATFORM_HOST") || "localhost"
 
 config :bulma_example,
   ecto_repos: [BulmaExample.Repo],
-  generators: [timestamp_type: :utc_datetime]
+  generators: [timestamp_type: :utc_datetime, binary_id: true],
+  http_client_opts: [],
+  app_url: app_url,
+  api_url: api_url,
+  cookie_domain: if(platform_host == "localhost", do: "localhost", else: ".#{platform_host}")
 
-# Configures the endpoint
 config :bulma_example, BulmaExampleWeb.Endpoint,
-  url: [host: "localhost"],
+  url: [host: platform_host],
   adapter: Bandit.PhoenixAdapter,
   render_errors: [
-    formats: [html: BulmaExampleWeb.ErrorHTML, json: BulmaExampleWeb.ErrorJSON],
+    formats: [json: BulmaExampleWeb.ErrorJSON],
     layout: false
   ],
   pubsub_server: BulmaExample.PubSub,
   live_view: [signing_salt: "usLQ8Pbe"]
-
 
 config :bulma_example, BulmaExample.Mailer, adapter: Swoosh.Adapters.Local
 

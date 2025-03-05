@@ -1,0 +1,29 @@
+version: "3"
+
+tasks:
+  api:
+    dotenv: [".env"]
+    dir: "."
+    cmds:
+      - "{{ .CLI_ARGS }}"
+
+  mix:
+    cmds:
+      - task: api
+        vars: { CLI_ARGS: "mix {{ .CLI_ARGS }}"}
+
+  api:dev:
+    cmds:
+      - task: api
+        vars: { CLI_ARGS: 'mix phx.server' }
+
+  
+  compose:
+    dir: "."
+    cmds:
+      - docker-compose {{ .CLI_ARGS }}
+
+  docker:up:
+    cmds:
+      - task: compose
+        vars: { CLI_ARGS: 'up -d' }

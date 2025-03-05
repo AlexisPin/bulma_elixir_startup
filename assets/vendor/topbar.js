@@ -7,6 +7,8 @@
 (function (window, document) {
   "use strict";
 
+  console.log("topbar.js loaded");
+
   // https://gist.github.com/paulirish/1579671
   (function () {
     var lastTime = 0;
